@@ -39,10 +39,15 @@ sampleAlbums.push({
 
 $(document).ready(function() {
   console.log('app.js loaded!');
-  sampleAlbums.forEach(function(sampleAlbums){
-  renderAlbum(sampleAlbums);
+  // sampleAlbums.forEach(function(sampleAlbums){
+  // renderAlbum(sampleAlbums);
 
+$.get('api/albums', function(res){
+  console.log(res);
+  res.forEach(function(thisAlbum){
+    renderAlbum(thisAlbum);
   });
+});
 
 });
 
