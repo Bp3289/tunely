@@ -3,6 +3,31 @@
 
 var db = require("./models");
 
+
+var sampleSongs = [];
+
+sampleSongs.push({ name: 'Famous',
+                   trackNumber: 1
+});
+sampleSongs.push({ name: "All of the Lights",
+                   trackNumber: 2
+});
+sampleSongs.push({ name: 'Guilt Trip',
+                   trackNumber: 3
+});
+sampleSongs.push({ name: 'Paranoid',
+                   trackNumber: 4
+});
+sampleSongs.push({ name: 'Ultralight Beam',
+                   trackNumber: 5
+});
+sampleSongs.push({ name: 'Runaway',
+                   trackNumber: 6
+});
+sampleSongs.push({ name: 'Stronger',
+                   trackNumber: 7
+});
+
 var albumsList = [];
 albumsList.push({
            
@@ -31,6 +56,12 @@ albumsList.push({
               releaseDate: '2008, November 24',
               genres: [ 'r&b', 'electropop', 'synthpop' ]
             });
+
+  albumsList.forEach(
+    function(eachAlbum, index){
+      eachAlbum.songs = sampleSongs;
+    }
+    );
 
 db.Album.remove({}, function(err, albums){
 
