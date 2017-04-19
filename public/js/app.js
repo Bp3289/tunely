@@ -49,8 +49,20 @@ $.get('api/albums', function(res){
   });
 });
 
-});
+$("form").on("submit", function(e){
+        e.preventDefault();
+        console.log($(this).serialize() );
+        $.post("/api/albums", $(this).serialize() );
+        $(this).trigger("reset");
+      });
 
+
+$('#album-form').submit(function() {
+    // Get all the forms elements and their values in one step
+    var values = $(this).serialize();
+    console.log(values);
+
+});
 
 
 
@@ -99,9 +111,14 @@ function renderAlbum(album) {
   "          <!-- end one album -->";
 
   // render to the page with jQuery
+
+function reRenderAlbum(id, data) {
+  var album = $("div").find("[data-album-id='" + id + "']");
+  album.remove();
+  renderAlbum(data);
+}
+
   console.log('album appended');
   $('#albums').append(albumHtml);
 }
-
-
-                  
+});                  
