@@ -39,8 +39,11 @@ sampleAlbums.push({
 
 $(document).ready(function() {
   console.log('app.js loaded!');
-  // sampleAlbums.forEach(function(sampleAlbums){
-  // renderAlbum(sampleAlbums);
+   $.get('/api/albums', function(albums) {
+        albums.forEach(function(album){
+        renderAlbum(album);
+       });
+      });
 
 $.get('api/albums', function(res){
   console.log(res);
@@ -67,8 +70,10 @@ $('#album-form').submit(function() {
 
 
 
+
 // this function takes a single album and renders it to the page
 function renderAlbum(album) {
+
   console.log('rendering album:', album);
 
   var albumHtml =
@@ -118,7 +123,7 @@ function reRenderAlbum(id, data) {
   renderAlbum(data);
 }
 
-  console.log('album appended');
+//   console.log('album appended');
   $('#albums').append(albumHtml);
 }
 });                  
