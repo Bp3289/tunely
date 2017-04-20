@@ -1,70 +1,29 @@
 // SERVER-SIDE JAVASCRIPT
 
-//require express in our app
+
 var express = require('express');
-// generate a new express app and call it 'app'
-var app = express();
 var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: true }));
+
+var app = express();
 
 // serve static files from public folder
 app.use(express.static(__dirname + '/public'));
 
 var db = require('./models');
 
-/************
- * DATABASE *
- ************/
-
-/* hard-coded data */
-var albums = [];
-albums.push({
-              _id: 132,
-              artistName: 'the Old Kanye',
-              name: 'The College Dropout',
-              releaseDate: '2004, February 10',
-              genres: [ 'rap', 'hip hop' ]
-            });
-albums.push({
-              _id: 133,
-              artistName: 'the New Kanye',
-              name: 'The Life of Pablo',
-              releaseDate: '2016, Febraury 14',
-              genres: [ 'hip hop' ]
-            });
-albums.push({
-              _id: 134,
-              artistName: 'the always rude Kanye',
-              name: 'My Beautiful Dark Twisted Fantasy',
-              releaseDate: '2010, November 22',
-              genres: [ 'rap', 'hip hop' ]
-            });
-albums.push({
-              _id: 135,
-              artistName: 'the sweet Kanye',
-              name: '808s & Heartbreak',
-              releaseDate: '2008, November 24',
-              genres: [ 'r&b', 'electropop', 'synthpop' ]
-            });
+app.use(bodyParser.urlencoded({ extended: true}));
+app.use(bodyParser.json());
 
 
 
-/**********
- * ROUTES *
- **********/
 
-/*
- * HTML Endpoints
- */
 
 app.get('/', function homepage (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
 
-/*
- * JSON API Endpoints
- */
+//JSon endpoints
 
 app.get('/api', function api_index (req, res){
   res.json({
@@ -77,25 +36,56 @@ app.get('/api', function api_index (req, res){
   });
 });
 
-
 app.get('/api/albums', function album_index(req, res){
-  db.Album.find({}, function(err, albums) {
-  res.json(albums);
-});
+    
+    db.Album.find({}, function(err, albums){
+      //has to be lowercase
+      res.json(albums);
+    });
+    
 });
 
-app.post('/api/albums', function album_create(req, res){
-  var body = req.body;
-  console.log(body);
-  body.genres = body.genres.split(', ');
-  db.Album.create(body, function(error, album) {
-  console.log(album);
+
+
+app.post('/api/albums', function album_post(req,res){
+
+  var createAlbum = new db.Album({
+              artistName: req.body.artistName,
+              name: req.body.name,
+              releaseDate: req.body.releaseDate,
+              genres: [req.body.genres]
+  });
+ 
+  createAlbum.save(function(err, album){
+    res.json(req.body.name+" was added");
   });
 });
-    
-   
-    
-  
+
+app.get('/api/albums/:id', function albumShow(req,res){
+  //go to the db and find the album with id form the url
+  db.Album.findOne({_id: req.params.id}, function(err, album){
+    //respond with json
+    res.json(album);
+  });
+});
+
+app.post('/api/albums/:albumId/songs', function songCreate(req, res) {
+  //go to db find one album with id from url string {_id: req.params.albumId} 
+  db.Album.findOne({_id: req.params.albumId}, function(err, album) {
+    if (err) { console.log('error album+songs post route:' + err); }
+/// model for making new song
+    var song = new db.Song(req.body);
+    /// push the song into the album's songs array
+    album.songs.push(song);
+    //save the album into the db
+    album.save(function(err, savedAlbum) {
+      if (err) { console.log('error', err); }
+      console.log('album with new song saved:', savedAlbum);
+      res.json(song);
+    });
+  });
+
+});
 
 /**********
  * SERVER *

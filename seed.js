@@ -1,9 +1,8 @@
 // This file allows us to seed our application with data
-// simply run: `node seed.js` from the root of this project folder.
+
 
 var db = require("./models");
-
-
+ 
 var sampleSongs = [];
 
 sampleSongs.push({ name: 'Famous',
@@ -26,42 +25,49 @@ sampleSongs.push({ name: 'Runaway',
 });
 sampleSongs.push({ name: 'Stronger',
                    trackNumber: 7
-});
+}); 
 
-var albumsList = [];
-albumsList.push({
-           
-              artistName: 'the Old Kanye',
+var albumsList =[];
+ albumsList.push({
+             
+              artistName: 'the Oldest Kanye',
               name: 'The College Dropout',
               releaseDate: '2004, February 10',
               genres: [ 'rap', 'hip hop' ]
             });
 albumsList.push({
-         
+              
               artistName: 'the New Kanye',
               name: 'The Life of Pablo',
               releaseDate: '2016, Febraury 14',
               genres: [ 'hip hop' ]
             });
 albumsList.push({
+             
               artistName: 'the always rude Kanye',
               name: 'My Beautiful Dark Twisted Fantasy',
               releaseDate: '2010, November 22',
               genres: [ 'rap', 'hip hop' ]
             });
 albumsList.push({
-             
+              
               artistName: 'the sweet Kanye',
               name: '808s & Heartbreak',
               releaseDate: '2008, November 24',
               genres: [ 'r&b', 'electropop', 'synthpop' ]
             });
 
-  albumsList.forEach(
-    function(eachAlbum, index){
-      eachAlbum.songs = sampleSongs;
+
+albumsList.forEach(
+  function(eachAlbum, index){
+  eachAlbum.songs = sampleSongs;
+  
+
+});
+var i;
+for (i = 0; i < albumsList.length; ++i) {
+      console.log(albumsList[i].songs);
     }
-    );
 
 db.Album.remove({}, function(err, albums){
 
@@ -69,6 +75,8 @@ db.Album.remove({}, function(err, albums){
     if (err) { return console.log('ERROR', err); }
     console.log("all albums:", albums);
     console.log("created", albums.length, "albums");
+    
+  
     process.exit();
   });
 
